@@ -153,48 +153,52 @@ let routes = [
 
 let getData = function (route) {
 
-    request('https://production-dot-nobina-eu.appspot.com/api/GetVehiclePositions', {
-        qs: {
-            route: route
-        },
-        headers: {
-            'Host': 'production-dot-nobina-eu.appspot.com',
-            'user-agent': 'gzip',
-            'x-user-agent': 'Res i STHLM',
-            'x-version': '2.2.2',
-            'x-os': 'Android',
-            'x-osversion': '29',
-            'x-devicename': 'SM-G986B',
-            'x-language': 'English'
-        },
-        gzip: true,
-        followRedirect: false,
-        strictSSL: false,
-        maxAttempts: 2,   // (default) try 5 times
-        retryDelay: 250,
+    if (wss.clients.size > 0) {
 
-    }, function (err, res, body) {
+        request('https://production-dot-nobina-eu.appspot.com/api/GetVehiclePositions', {
+            qs: {
+                route: route
+            },
+            headers: {
+                'Host': 'production-dot-nobina-eu.appspot.com',
+                'user-agent': 'gzip',
+                'x-user-agent': 'Res i STHLM',
+                'x-version': '2.2.2',
+                'x-os': 'Android',
+                'x-osversion': '29',
+                'x-devicename': 'SM-G986B',
+                'x-language': 'English'
+            },
+            gzip: true,
+            followRedirect: false,
+            strictSSL: false,
+            maxAttempts: 2,   // (default) try 5 times
+            retryDelay: 250,
 
-        if (err) {
-            return console.log(err);
-        }
+        }, function (err, res, body) {
 
-        try {
-            let data = JSON.parse(body);
+            if (err) {
+                return console.log(err);
+            }
 
-            let now = Date.now();
+            try {
+                let data = JSON.parse(body);
 
-            data.pos = data.pos.filter((obj) => now-obj.t < 120000);
+                let now = Date.now();
 
-            // if same id in multiple nr
+                data.pos = data.pos.filter((obj) => now - obj.t < 120000);
 
-            BUSES[data.route] = data;
+                // if same id in multiple nr
 
-        } catch (e) {
-            console.log(e.toString());
-        }
+                BUSES[data.route] = data;
 
-    });
+            } catch (e) {
+                console.log(e.toString());
+            }
+
+        });
+
+    }
 }
 
 
@@ -213,8 +217,17 @@ setInterval(() => {
         })
     }
 
-    getData(routes[i++]);
+    let newRoute = routes[i++];
+    if (newRoute !== '555') {
+        getData(newRoute);
+    }
+
+
 }, Math.max(500, 3000 / length));
+
+setInterval(() => {
+    getData('555')
+}, 1000)
 
 
 
