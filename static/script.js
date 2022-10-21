@@ -237,7 +237,7 @@ class Bus {
 
 
             this.marker.setLatLng(this.latLng);
-            //this.updateTooltip();
+            this.updateTooltip();
             let distance = prev.latLng.distanceTo(this.latLng);
 
             //this.log('Distance ' + distance + 'm');
@@ -334,6 +334,18 @@ class Bus {
 
         return this;
     }
+
+    highlight(timeout) {
+        let imageElement = this.imageElement;
+
+        imageElement.css({'border-radius': '25px', border: '31px solid blue'});
+        setTimeout(function () {
+            console.log('Done highlight')
+            imageElement.css({border: 'none'});
+        }, timeout * 1000);
+
+        return this;
+    }
 }
 
 
@@ -391,6 +403,46 @@ function init_map(cb = () => {}) {
     })
 
     baseLayers["Map"].addTo(map);
+
+    map.addControl( (new L.Control.Search({sourceData: function (text, callResponse) {
+        //here can use custom criteria or merge data from multiple layers
+
+            let data = [];
+
+            for (let id in buses) {
+                if (buses.hasOwnProperty(id)) {
+                    data.push({
+                            loc: Object.values(buses[id].latLng),
+                            title: id
+                        }
+                    )
+                }
+            }
+
+        callResponse(data);
+
+        return {	//called to stop previous requests on map move
+            abort: function() {
+                console.log('aborted request:'+ text);
+            }
+        };
+    }, text:'BUSS NR...', zoom:16, marker: false, markerLocation:false})).on('search:locationfound'	, (data) => {
+        for (let id in buses) {
+            if (buses.hasOwnProperty(id)) {
+                if (map.getBounds().contains(buses[id].latLng)) {
+                    buses[id].resize();
+                }
+
+            }
+        }
+
+        console.log('BUS: ' + data.text)
+
+        buses[data.text].highlight(10);
+
+    }) );
+
+
 
 
     let zoomInterval = 0;
@@ -489,7 +541,7 @@ function connect() {
                         if (Object.keys(buses).length > 0) {
                             let markers = new L.featureGroup(Object.keys(buses).map((id) => buses[id].marker));
 
-                            map.fitBounds(markers.getBounds().pad(0.1), {animate: false});
+                           // map.fitBounds(markers.getBounds().pad(0.1), {animate: false});
                             for (let id in buses) {
                                 if (buses.hasOwnProperty(id)) {
                                     buses[id].resize();
@@ -505,6 +557,8 @@ function connect() {
                 for (let id in buses) {
                     if (buses.hasOwnProperty(id) && ids.indexOf(id) === -1) {
                         buses[id].remove();
+                    } else if (map.getBounds().contains(buses[id].latLng)) {
+                        buses[id].resize();
                     }
                 }
 
