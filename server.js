@@ -26,19 +26,17 @@ httpServer.listen(3299, function () {
 app.use('/static', express.static('static'))
 
 httpServer.on('error', err => console.log(('\nhttpServer:\n' + err)));
-app.get('/', function(req, resp) {
+app.get('/', function (req, resp) {
 
     resp.sendFile(path.join(__dirname + '/index.html'));
 
 });
-app.get('/positions', function(req, resp) {
+app.get('/positions', function (req, resp) {
 
-resp.json(objToSend);
+    resp.json(objToSend);
 
 
 });
-
-
 
 
 let wss = new WebSocket.Server({server: httpServer});
@@ -123,9 +121,6 @@ wss.on('error', function (err) {
 
 startBroadcast();
 
-/*
-
- */
 
 let routes = [
     '518',
@@ -166,7 +161,7 @@ let getData = function (route) {
                 'x-version': '2.2.2',
                 'x-os': 'Android',
                 'x-osversion': '29',
-                'x-devicename': 'SM-G986B',
+                'x-devicename': 'SM-G950F',
                 'x-language': 'English'
             },
             gzip: true,
@@ -205,13 +200,13 @@ let getData = function (route) {
 let i = 0;
 let length = routes.length;
 setInterval(() => {
-    i = i > length-1 ? 0 : i;
+    i = i > length - 1 ? 0 : i;
 
     let now = Date.now();
 
     for (let nr in BUSES) {
         BUSES[nr].pos.forEach((obj, i) => {
-            if (now-obj.t > 120000) {
+            if (now - obj.t > 120000) {
                 BUSES[nr].pos.splice(i, 1);
             }
         })
@@ -228,7 +223,6 @@ setInterval(() => {
 setInterval(() => {
     getData('555')
 }, 1000)
-
 
 
 function getDateTime(onlyTime, noSeconds, onlyDate, minOffset = 0) {
