@@ -495,7 +495,7 @@ function connect() {
     firstRun = false;
 
 
-    wss = new WebSocket('ws://***REMOVED***:3299');
+    wss = new WebSocket('ws://localhost:3299');
 
     wss.onopen = function () {
 
