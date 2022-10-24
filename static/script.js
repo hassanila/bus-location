@@ -377,7 +377,7 @@ function init_map(cb = () => {}) {
             id: 'mapbox/streets-v11',
             tileSize: 512,
             zoomOffset: -1,
-            accessToken: '***REMOVED***'
+            accessToken: 'YOUR-ACCESS-TOKEN'
         }),
         "Satellite": L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
             maxZoom: maxZoom,
@@ -385,7 +385,7 @@ function init_map(cb = () => {}) {
             id: 'mapbox/satellite-streets-v11',
             tileSize: 512,
             zoomOffset: -1,
-            accessToken: '***REMOVED***'
+            accessToken: 'YOUR-ACCESS-TOKEN'
         }),
         'Google Satellite': L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
             maxZoom: maxZoom,
