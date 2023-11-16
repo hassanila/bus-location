@@ -494,8 +494,8 @@ function connect() {
 
     firstRun = false;
 
-
-    wss = new WebSocket('ws://localhost:3299');
+    const wsHost = window.location.hostname;
+    wss = new WebSocket('ws://' + wsHost + ':3299');
 
     wss.onopen = function () {
 
