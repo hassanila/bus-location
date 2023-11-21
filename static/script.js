@@ -495,7 +495,10 @@ function connect() {
     firstRun = false;
 
     const wsHost = window.location.hostname;
-    wss = new WebSocket('ws://' + wsHost + ':3299');
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsPort = window.location.port ? `:${window.location.port}` : '';
+
+    const wss = new WebSocket(`${wsProtocol}//${wsHost}${wsPort}`);
 
     wss.onopen = function () {
 
