@@ -432,7 +432,7 @@ function init_map(cb = () => {}) {
     //L.marker([station.lat, station.lon]).addTo(map);
   });
 
-  baseLayers["Map"].addTo(map);
+  baseLayers["Google Satellite"].addTo(map);
 
   map.addControl(
     new L.Control.Search({
