@@ -20,7 +20,7 @@ let icons = {
 let initialZoom = 13;
 let initialTextSize = 15;
 let maxZoom = 20;
-let initialLocation = [59.50169484910924, 17.672710418701175];
+let initialLocation = [59.4231944, 17.8320723];
 let busIconSize = { height: 185, width: 75 };
 let busIconScale = 0.5;
 
